@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>💝 Secret Love Adventure 💝</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #fff;
+            --accent: #ff4f8b;
+            --secondary: #ff8fb1;
+            --secret: #9d4edd;
+            --glow: 0 0 20px #ff4f8b;
+            --secret-glow: 0 0 30px #9d4edd;
+        }
+
+        .light {
+            --bg: #fff0f5;
+            --text: #2d1b2d;
+            --accent: #ff2f75;
+            --secondary: #ff6b9d;
+            --secret: #7b2cbf;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background 0.5s, color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            overflow-y: auto;
+            transition: .5s;
+            position: relative;
+            cursor: default;
+            min-height: 100vh;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Audio Controls */
+        .audio-control {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: var(--accent);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: var(--glow);
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .audio-control.playing {
+            animation: pulse 1s infinite;
+        }
+
+        /* Secret Cursor Effect - Disabled on mobile for performance */
+        @media (min-width: 768px) {
+            body::after {
+                content: '💖';
+                position: fixed;
+                pointer-events: none;
+                font-size: 24px;
+                left: var(--x);
+                top: var(--y);
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 9999;
+                filter: drop-shadow(0 0 10px var(--accent));
+            }
+
+            body:hover::after {
+                opacity: 0.7;
+            }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: var(--accent);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: var(--glow);
+            animation: pulse 2s infinite;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Secret Button - Hidden Surprise */
+        .secret-button {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--secret);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            z-index: 1000;
+            animation: secretPulse 2s infinite;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .secret-button:hover,
+        .secret-button:active {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        @keyframes secretPulse {
+            0% {
+                box-shadow: 0 0 0 0 var(--secret);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(157, 78, 221, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(157, 78, 221, 0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 80px 15px 30px;
+            text-align: center;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: var(--glow);
+            animation: titleFloat 3s infinite;
+            word-wrap: break-word;
+        }
+
+        @keyframes titleFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 20px 0 15px;
+            font-family: 'Great Vibes', cursive;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            color: #fff;
+            cursor: pointer;
+            margin: 10px;
+            transition: .3s;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 79, 139, 0.4);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 200px;
+            max-width: 90%;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Typing Container */
+        .typing-container {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 20px;
+            margin: 10px auto;
+            max-width: 100%;
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #typing {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            font-weight: 300;
+            word-wrap: break-word;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2rem;
+            background: var(--accent);
+            margin-left: 3px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* HIDDEN TREASURE HUNT */
+        .treasure-hunt {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 100%;
+        }
+
+        .hidden-spot {
+            position: relative;
+            height: 150px;
+            background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+            border-radius: 15px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .hidden-spot::before {
+            content: '🔍 Tap to Search 🔍';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            opacity: 0.7;
+            width: 100%;
+            text-align: center;
+        }
+
+        .treasure-found {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff4f8b, #9d4edd);
+            color: white;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: treasureAppear 1s;
+            padding: 15px;
+            word-wrap: break-word;
+        }
+
+        /* Mystery Box */
+        .mystery-box-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .mystery-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff4f8b, #9d4edd);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: 0.3s;
+            animation: boxFloat 3s infinite;
+        }
+
+        @media (max-width: 360px) {
+            .mystery-box {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+        }
+
+        /* Love Letter */
+        .love-letter {
+            background: #fff1e6;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 100%;
+            margin: 20px auto;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-front,
+        .letter-back {
+            backface-visibility: hidden;
+            width: 100%;
+        }
+
+        .letter-front {
+            color: #ff4f8b;
+            font-size: 1.5rem;
+        }
+
+        .letter-back {
+            transform: rotateY(180deg);
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .love-letter.opened {
+            transform: rotateY(180deg);
+        }
+
+        /* Secret Code Puzzle */
+        .secret-code-puzzle {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 280px;
+            margin: 15px auto;
+        }
+
+        .code-piece {
+            background: linear-gradient(135deg, var(--accent), var(--secret));
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .code-piece:active {
+            transform: scale(0.9);
+        }
+
+        /* Gallery */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            width: calc(50% - 15px);
+            max-width: 250px;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: .4s;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(255, 79, 139, 0.9));
+            color: white;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Message in a Bottle */
+        .bottle {
+            position: relative;
+            width: 160px;
+            height: 220px;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+
+        .bottle-img {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 50% 50% 30% 30%;
+            position: relative;
+            overflow: hidden;
+            animation: bottleFloat 4s infinite;
+        }
+
+        .bottle-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff9e6;
+            border-radius: 50% 50% 30% 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0);
+            transition: 0.5s;
+            color: #333;
+            font-size: 1rem;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .bottle:active .bottle-message {
+            transform: scale(1);
+        }
+
+        /* Magic 8-Ball */
+        .magic-ball {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: radial-gradient(circle at 30% 30%, #333, #000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            box-shadow: 0 0 30px var(--accent);
+            animation: ballShake 5s infinite;
+        }
+
+        #magicAnswer {
+            font-size: 1.2rem;
+            padding: 15px;
+            word-wrap: break-word;
+        }
+
+        /* Scratch Card */
+        .scratch-card {
+            width: 100%;
+            max-width: 280px;
+            height: 160px;
+            margin: 15px auto;
+            background: silver;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .scratch-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #888, #ccc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #333;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .scratch-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px;
+            text-align: center;
+        }
+
+        /* Surprise Egg */
+        .surprise-egg {
+            width: 160px;
+            height: 200px;
+            margin: 15px auto;
+            background: linear-gradient(135deg, #fff5e6, #ffe4cc);
+            border-radius: 50% 50% 40% 40%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: eggWiggle 3s infinite;
+        }
+
+        .egg-crack {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            opacity: 0;
+            transition: 0.5s;
+            text-align: center;
+        }
+
+        .surprise-egg:active .egg-crack {
+            opacity: 1;
+        }
+
+        /* Magic Mirror */
+        .magic-mirror {
+            width: 100%;
+            max-width: 280px;
+            height: 320px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #b0c4de, #87ceeb);
+            border-radius: 50% 50% 30% 30%;
+            border: 8px solid gold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mirror-reflection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 30%, rgba(255, 255, 255, 0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            text-shadow: 0 0 15px gold;
+            transform: scale(0);
+            transition: 1s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .magic-mirror:active .mirror-reflection {
+            transform: scale(1);
+        }
+
+        /* Love Messages */
+        .love-messages {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .message-card {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            padding: 20px;
+            border-radius: 20px;
+            animation: cardPop 0.5s;
+            transition: .3s;
+        }
+
+        .message-card p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 25px;
+            max-width: 100%;
+            margin: 20px auto;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+        }
+
+        input {
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 2px solid var(--accent);
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            font-size: 1rem;
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
+        }
+
+        /* Heart Rain */
+        .heart {
+            position: fixed;
+            top: -50px;
+            font-size: 20px;
+            animation: fall linear forwards;
+            pointer-events: none;
+            z-index: 999;
+            will-change: transform;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(120vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--color);
+            top: -10px;
+            animation: confettiFall linear forwards;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Popup */
+        .popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+        }
+
+        .popup.active {
+            display: flex;
+            animation: popupFade 0.3s;
+        }
+
+        .popup img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--accent);
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            background: var(--accent);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .3s;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff4f8b, #9d4edd);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            z-index: 3000;
+            animation: notificationFade 0.3s;
+            border: 2px solid gold;
+            box-shadow: 0 0 30px gold;
+            max-width: 90%;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        @keyframes notificationFade {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -30%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+
+            .gallery-item {
+                width: calc(50% - 10px);
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                min-width: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .page {
+                padding: 70px 10px 20px;
+            }
+
+            .mystery-box {
+                width: 85px;
+                height: 85px;
+                font-size: 2rem;
+            }
+
+            .magic-ball {
+                width: 180px;
+                height: 180px;
+            }
+
+            .bottle {
+                width: 140px;
+                height: 200px;
+            }
+
+            .surprise-egg {
+                width: 140px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-item {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .mystery-box {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+
+            .code-piece {
+                font-size: 1.5rem;
+                padding: 10px;
+            }
+        }
+
+        /* Landscape Mode */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .page {
+                padding: 60px 15px 15px;
+            }
+
+            .gallery {
+                flex-direction: row;
+            }
+
+            .gallery-item {
+                width: 180px;
+            }
+
+            .mystery-box-container {
+                flex-direction: row;
+            }
+        }
+
+        /* Touch Optimizations */
+        button,
+        .mystery-box,
+        .code-piece,
+        .gallery-item,
+        .bottle,
+        .magic-ball,
+        .surprise-egg,
+        .magic-mirror,
+        .love-letter,
+        .hidden-spot {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Prevent text selection */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow text selection in inputs */
+        input {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Audio Control Button -->
+    <button class="audio-control" id="audioControl" onclick="toggleMusic()">🔊 Play Music</button>
+
+    <!-- Secret Button (Hidden Surprise) -->
+    <button class="secret-button" onclick="secretSurprise()" title="✨ Secret Surprise ✨">💝</button>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+    <!-- Audio Element with multiple source formats for better compatibility -->
+    <audio id="music" loop preload="auto">
+        <source src="./song (2).mp3" type="audio/mpeg">
+        <source src="./song (2).mp3" type="audio/mp3">
+        <!-- Fallback text if audio doesn't load -->
+        Your browser doesn't support audio. Please click the play button.
+    </audio>
+
+    <!-- PAGE 1 - WELCOME -->
+    <div class="page active" id="p1">
+        <div class="typing-container">
+            <h1>✨ Our Secret Adventure ✨</h1>
+            <div id="typing"></div>
+            <span class="cursor"></span>
+        </div>
+
+        <!-- Hidden Treasure Hunt -->
+        <div class="treasure-hunt">
+            <h2>🔍 Find the Hidden Treasure 🔍</h2>
+            <div class="hidden-spot" id="treasureSpot" onclick="findTreasure()" ontouchstart="findTreasure()">
+                <div class="treasure-found" id="treasureFound">
+                    💖 You found my heart! 💖
+                </div>
+            </div>
+        </div>
+
+        <!-- Mystery Boxes -->
+        <div class="mystery-box-container">
+            <div class="mystery-box" onclick="openMysteryBox(0, this)" ontouchstart="openMysteryBox(0, this)">❓</div>
+            <div class="mystery-box" onclick="openMysteryBox(1, this)" ontouchstart="openMysteryBox(1, this)">❓</div>
+            <div class="mystery-box" onclick="openMysteryBox(2, this)" ontouchstart="openMysteryBox(2, this)">❓</div>
+        </div>
+
+        <!-- Love Letter -->
+        <div class="love-letter closed" id="loveLetter" onclick="openLoveLetter()" ontouchstart="openLoveLetter()">
+            <div class="letter-front">💌 Open This Letter 💌</div>
+            <div class="letter-back">You are my everything! ❤️ Forever yours!</div>
+        </div>
+
+        <!-- Secret Code Puzzle -->
+        <h2>🔐 Crack the Love Code 🔐</h2>
+        <div class="secret-code-puzzle" id="codePuzzle">
+            <div class="code-piece" onclick="revealCodePiece(0)" ontouchstart="revealCodePiece(0)">❤️</div>
+            <div class="code-piece" onclick="revealCodePiece(1)" ontouchstart="revealCodePiece(1)">💕</div>
+            <div class="code-piece" onclick="revealCodePiece(2)" ontouchstart="revealCodePiece(2)">💖</div>
+            <div class="code-piece" onclick="revealCodePiece(3)" ontouchstart="revealCodePiece(3)">💗</div>
+            <div class="code-piece" onclick="revealCodePiece(4)" ontouchstart="revealCodePiece(4)">💓</div>
+            <div class="code-piece" onclick="revealCodePiece(5)" ontouchstart="revealCodePiece(5)">💞</div>
+        </div>
+
+        <button onclick="go(2)" ontouchstart="go(2)">📸 Continue the Adventure 📸</button>
+        <button onclick="startHeartRain()" ontouchstart="startHeartRain()">💕 Make it Rain Love 💕</button>
+    </div>
+
+    <!-- PAGE 2 - MAGICAL GALLERY -->
+    <div class="page" id="p2">
+        <h1>💞 Magical Moments 💞</h1>
+        <p style="font-size: 1.1rem; margin-bottom: 20px;">Each photo hides a secret message... ✨</p>
+
+        <div class="gallery">
+            <div class="gallery-item" onclick="revealPhotoSecret(0, this)" ontouchstart="revealPhotoSecret(0, this)">
+                <img src="./saran.jpeg" alt="Memory 1">
+                <div class="gallery-overlay">
+                    <span>💖 Click to reveal</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="revealPhotoSecret(1, this)" ontouchstart="revealPhotoSecret(1, this)">
+                <img src="./image2.jpeg" alt="Memory 2">
+                <div class="gallery-overlay">
+                    <span>💕 Hidden message</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="revealPhotoSecret(2, this)" ontouchstart="revealPhotoSecret(2, this)">
+                <img src="./image3.jpeg" alt="Memory 3">
+                <div class="gallery-overlay">
+                    <span>💗 Click for surprise</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message in a Bottle -->
+        <div class="bottle" onclick="revealBottleMessage()" ontouchstart="revealBottleMessage()">
+            <div class="bottle-img">
+                <div class="bottle-message" id="bottleMessage">
+                    You're my treasure! 💝
+                </div>
+            </div>
+        </div>
+
+        <!-- Magic 8-Ball -->
+        <div class="magic-ball" onclick="askMagicBall()" ontouchstart="askMagicBall()">
+            <span id="magicAnswer">🔮</span>
+        </div>
+
+        <button onclick="go(3)" ontouchstart="go(3)">🎁 Next Magical Surprise 🎁</button>
+    </div>
+
+    <!-- PAGE 3 - LOVE QUIZ -->
+    <div class="page" id="p3">
+        <h1>💌 Secret Love Puzzle 💌</h1>
+
+        <div class="quiz-container">
+            <p style="font-size: 1.3rem; margin-bottom: 20px;">What's the magic word? 💫</p>
+
+            <!-- Scratch Card -->
+            <div class="scratch-card" id="scratchCard" onclick="scratchMobile()" ontouchstart="scratchMobile()">
+                <div class="scratch-cover" id="scratchCover">
+                    Tap to Reveal! 🖐️
+                </div>
+                <div class="scratch-message">
+                    The answer is LOVE! ❤️
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input id="code" placeholder="Enter the secret word..." type="text">
+                <button onclick="checkCode()" ontouchstart="checkCode()">🔓 Unlock My Heart 🔓</button>
+            </div>
+
+            <!-- Surprise Egg -->
+            <div class="surprise-egg" onclick="crackEgg()" ontouchstart="crackEgg()">
+                <div class="egg-crack" id="eggCrack">
+                    🎁 Surprise! 🎁
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <p style="font-size: 1rem;">❤️ 💕 💖 💗 💓 💞 💝 💘</p>
+                <p>Hint: The strongest feeling in the world 🌍</p>
+            </div>
+        </div>
+
+        <button onclick="go(2)" ontouchstart="go(2)">◀ Back</button>
+        <button onclick="showHint()" ontouchstart="showHint()">💭 Hint? 💭</button>
+    </div>
+
+    <!-- PAGE 4 - FINAL SURPRISE -->
+    <div class="page" id="p4">
+        <h1>💍 The Ultimate Surprise 💍</h1>
+
+        <!-- Magic Mirror -->
+        <div class="magic-mirror" onclick="revealMirrorMessage()" ontouchstart="revealMirrorMessage()">
+            <div class="mirror-reflection" id="mirrorMessage">
+                You are the most beautiful person I've ever known! 💖
+            </div>
+        </div>
+
+        <div class="love-messages">
+            <div class="message-card">
+                <p>❤️ "You are my today and all of my tomorrows" ❤️</p>
+            </div>
+            <div class="message-card">
+                <p>💕 "I fall for you more every single day" 💕</p>
+            </div>
+            <div class="message-card">
+                <p>💖 "Every moment with you is magic" 💖</p>
+            </div>
+        </div>
+
+        <div style="margin: 30px 0;">
+            <p style="font-size: 1.8rem; animation: pulse 2s infinite;">💝 You + Me = Forever 💝</p>
+        </div>
+
+        <button onclick="ultimateSurprise()" ontouchstart="ultimateSurprise()">💍 ULTIMATE Surprise 💍</button>
+        <button onclick="startConfetti()" ontouchstart="startConfetti()">🎉 Celebrate 🎉</button>
+    </div>
+
+    <!-- POPUP -->
+    <div class="popup" id="popup" onclick="closePopup()" ontouchstart="closePopup()">
+        <span class="close-popup" onclick="closePopup(event)" ontouchstart="closePopup(event)">✖</span>
+        <img id="popupImg">
+    </div>
+
+    <script>
+        // Mobile touch optimization
+        document.addEventListener('touchstart', function (e) {
+            // Prevent double-tap zoom on buttons
+            if (e.target.closest('button')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Mouse trail effect - disabled on mobile
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                document.documentElement.style.setProperty('--x', e.clientX + 'px');
+                document.documentElement.style.setProperty('--y', e.clientY + 'px');
+            });
+        }
+
+        // Music Control
+        let music = document.getElementById("music");
+        let audioControl = document.getElementById("audioControl");
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (!isPlaying) {
+                // Try to play with user interaction
+                music.play()
+                    .then(() => {
+                        isPlaying = true;
+                        audioControl.innerHTML = "🔊 Now Playing";
+                        audioControl.classList.add("playing");
+                        showNotification("🎵 Love music is playing! 🎵", true);
+                    })
+                    .catch(error => {
+                        console.log("Audio play failed:", error);
+                        showNotification("⚠️ Please tap again to play music", false);
+                        // Fallback - try to load and play
+                        music.load();
+                        music.play().catch(e => {
+                            console.log("Fallback also failed");
+                        });
+                    });
+            } else {
+                music.pause();
+                isPlaying = false;
+                audioControl.innerHTML = "🔈 Play Music";
+                audioControl.classList.remove("playing");
+            }
+        }
+
+        // Alternative: Try to play on first user interaction
+        function playMusicOnInteraction() {
+            if (!isPlaying) {
+                music.play()
+                    .then(() => {
+                        isPlaying = true;
+                        audioControl.innerHTML = "🔊 Now Playing";
+                        audioControl.classList.add("playing");
+                    })
+                    .catch(() => {
+                        // Silently fail - user can click the button
+                    });
+            }
+        }
+
+        // Try to play on first touch/click anywhere (browser may still block)
+        document.body.addEventListener("touchstart", playMusicOnInteraction, { once: true });
+        document.body.addEventListener("click", playMusicOnInteraction, { once: true });
+
+        // Typing effect
+        const text = "Every love story is beautiful, but ours is my favorite ❤️ ✨ 💕 💖 💗";
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typing").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 60);
+            }
+        }
+        typeWriter();
+
+        // Progress bar
+        function updateProgress(page) {
+            document.getElementById("progressBar").style.width = (page * 25) + "%";
+        }
+
+        // Navigation
+        function go(n) {
+            document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+            document.getElementById("p" + n).classList.add("active");
+            updateProgress(n);
+            createHearts(3);
+            window.scrollTo(0, 0);
+        }
+
+        // Secret Treasure Hunt
+        function findTreasure() {
+            document.getElementById("treasureFound").style.display = "flex";
+            showNotification("💎 You found the hidden treasure! 💎", true);
+            createHearts(15);
+            setTimeout(() => {
+                document.getElementById("treasureFound").style.display = "none";
+            }, 2000);
+        }
+
+        // Mystery Boxes
+        let boxMessages = [
+            "💖 You're my dream come true!",
+            "💕 I love you more each day!",
+            "💗 Forever and always!"
+        ];
+
+        function openMysteryBox(index, box) {
+            box.classList.add("opened");
+            box.innerHTML = boxMessages[index];
+            showNotification(boxMessages[index], true);
+            createHearts(8);
+        }
+
+        // Love Letter
+        function openLoveLetter() {
+            const letter = document.getElementById("loveLetter");
+            letter.classList.toggle("opened");
+            if (letter.classList.contains("opened")) {
+                showNotification("💌 You've read my heart! 💌", true);
+            }
+        }
+
+        // Secret Code Puzzle
+        let revealedPieces = 0;
+        function revealCodePiece(index) {
+            const pieces = document.querySelectorAll(".code-piece");
+            if (!pieces[index].classList.contains("hidden")) {
+                pieces[index].classList.add("hidden");
+                revealedPieces++;
+
+                if (revealedPieces === 6) {
+                    showNotification("🎉 You cracked the code! The secret is LOVE! 🎉", true);
+                    createHearts(25);
+                }
+            }
+        }
+
+        // Photo Secrets
+        let photoSecrets = [
+            "💕 This day was magical because of you!",
+            "💖 The first time I saw you, my heart knew!",
+
+            "💗 You make every moment special!"
+        ];
+
+        function revealPhotoSecret(index, item) {
+            showNotification(photoSecrets[index], true);
+            item.style.transform = "scale(1.1)";
+            setTimeout(() => item.style.transform = "scale(1)", 300);
+        }
+
+        // Message in Bottle
+        function revealBottleMessage() {
+            document.getElementById("bottleMessage").style.transform = "scale(1)";
+            showNotification("💌 A message from the sea of love! 💌", true);
+        }
+
+        // Magic 8-Ball
+        const loveAnswers = [
+            "💖 Yes, forever!",
+            "💕 Definitely!",
+            "💗 Absolutely!",
+            "💓 Without a doubt!",
+            "💞 My heart says yes!",
+            "💝 100% YES!"
+        ];
+
+        function askMagicBall() {
+            const answer = loveAnswers[Math.floor(Math.random() * loveAnswers.length)];
+            document.getElementById("magicAnswer").textContent = answer;
+            document.querySelector(".magic-ball").classList.add("active");
+            setTimeout(() => {
+                document.querySelector(".magic-ball").classList.remove("active");
+            }, 1500);
+            showNotification(answer, true);
+        }
+
+        // Scratch Card (Mobile optimized)
+        let scratchRevealed = false;
+        function scratchMobile() {
+            if (!scratchRevealed) {
+                document.getElementById("scratchCover").style.opacity = "0";
+                showNotification("✨ You revealed the secret! It's LOVE! ✨", true);
+                scratchRevealed = true;
+            }
+        }
+
+        // Surprise Egg
+        function crackEgg() {
+            document.getElementById("eggCrack").style.opacity = "1";
+            showNotification("🥚 A love surprise hatched! 🥚", true);
+            createHearts(12);
+        }
+
+        // Magic Mirror
+        function revealMirrorMessage() {
+            document.getElementById("mirrorMessage").style.transform = "scale(1)";
+        }
+
+        // Secret Surprise
+        function secretSurprise() {
+            showNotification("💝 SECRET SURPRISE! You found the hidden button! 💝", true);
+            createHearts(40);
+            startConfetti();
+
+            const secretMsg = document.createElement("div");
+            secretMsg.className = "notification";
+            secretMsg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #ff4f8b, #9d4edd);
+                color: white;
+                padding: 20px;
+                border-radius: 30px;
+                font-size: 1.5rem;
+                z-index: 10000;
+                animation: notificationFade 0.5s;
+                box-shadow: 0 0 100px gold;
+                max-width: 90%;
+                text-align: center;
+            `;
+            secretMsg.innerHTML = "✨ DEVI, YOU ARE MY ONE AND ONLY! ✨<br>💖 I LOVE YOU FOREVER! 💖";
+            document.body.appendChild(secretMsg);
+            setTimeout(() => secretMsg.remove(), 4000);
+        }
+
+        // Ultimate Surprise
+        function ultimateSurprise() {
+            showNotification("💍 DEVI, WILL YOU MARRY ME? 💍", true);
+            createHearts(80);
+            startConfetti();
+            startFireworks();
+
+            const proposal = document.createElement("div");
+            proposal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, gold, #ff4f8b);
+                color: white;
+                padding: 30px;
+                border-radius: 40px;
+                font-size: 2rem;
+                z-index: 10000;
+                animation: notificationFade 1s;
+                box-shadow: 0 0 200px gold;
+                text-align: center;
+                max-width: 90%;
+            `;
+            proposal.innerHTML = "💍 DEVI 💍<br>💖 MARRY ME? 💖<br>✨ FOREVER YOURS ✨";
+            document.body.appendChild(proposal);
+
+            // Ring rain
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const ring = document.createElement("div");
+                    ring.className = "heart";
+                    ring.innerHTML = "💍";
+                    ring.style.left = Math.random() * 100 + "%";
+                    ring.style.animationDuration = (2 + Math.random() * 3) + "s";
+                    ring.style.fontSize = (25 + Math.random() * 30) + "px";
+                    document.body.appendChild(ring);
+                }, i * 80);
+            }
+
+            setTimeout(() => proposal.remove(), 6000);
+        }
+
+        // Check code
+        function checkCode() {
+            const code = document.getElementById("code").value.toLowerCase().trim();
+            const validCodes = ["love", "forever", "heart", "❤️", "💕", "forever us", "devi"];
+
+            if (validCodes.includes(code) || code.includes("love") || code.includes("❤️")) {
+                showNotification("💖 You unlocked my heart! 💖", true);
+                go(4);
+            } else {
+                showNotification("😜 Try: LOVE, FOREVER, or ❤️", false);
+            }
+        }
+
+        // Show hint
+        function showHint() {
+            showNotification("💭 Hint: It's what you feel in your heart! (LOVE) 💭", false);
+        }
+
+        // Notification system
+        function showNotification(message, isSuccess) {
+            const notification = document.createElement("div");
+            notification.className = "notification";
+            notification.style.background = isSuccess ?
+                'linear-gradient(135deg, #ff4f8b, #9d4edd)' :
+                'rgba(0, 0, 0, 0.8)';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2500);
+        }
+
+        // Popup functions
+        function openPopup(src) {
+            document.getElementById("popup").classList.add("active");
+            document.getElementById("popupImg").src = src;
+        }
+
+        function closePopup(event) {
+            if (event) event.stopPropagation();
+            document.getElementById("popup").classList.remove("active");
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            const btn = document.querySelector(".theme-toggle");
+            btn.textContent = btn.textContent.includes("🌙") ? "☀️" : "🌙";
+            createHearts(3);
+        }
+
+        // Heart rain
+        function startHeartRain() {
+            let count = 0;
+            const interval = setInterval(() => {
+                createHearts(2);
+                count++;
+                if (count > 15) clearInterval(interval);
+            }, 200);
+        }
+
+        function createHearts(count) {
+            const emojis = ['❤️', '💕', '💖', '💗', '💓', '💞', '💝', '💘', '💍', '✨'];
+
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement("div");
+                    heart.className = "heart";
+                    heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                    heart.style.left = Math.random() * 100 + "%";
+                    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+                    heart.style.fontSize = (15 + Math.random() * 25) + "px";
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 50);
+            }
+        }
+
+        // Confetti
+        function startConfetti() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement("div");
+                    confetti.className = "confetti";
+                    confetti.style.left = Math.random() * 100 + "%";
+                    confetti.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                    confetti.style.animationDuration = (2 + Math.random() * 2) + "s";
+                    confetti.style.width = (4 + Math.random() * 8) + "px";
+                    confetti.style.height = confetti.style.width;
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+
+        // Fireworks
+        function startFireworks() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement("div");
+                    firework.style.cssText = `
+                        position: fixed;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        width: 8px;
+                        height: 8px;
+                        background: hsl(${Math.random() * 360}, 100%, 60%);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 1000;
+                        animation: explode 1s forwards;
+                        box-shadow: 0 0 15px currentColor;
+                    `;
+
+                    const x = (Math.random() - 0.5) * 300;
+                    const y = (Math.random() - 0.5) * 300;
+
+                    firework.style.setProperty('--x', x + 'px');
+                    firework.style.setProperty('--y', y + 'px');
+
+                    document.body.appendChild(firework);
+                    setTimeout(() => firework.remove(), 900);
+                }, i * 60);
+            }
+        }
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes explode {
+                0% { transform: scale(1); opacity: 1; }
+                100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+            }
+            
+            @keyframes notificationFade {
+                from { opacity: 0; transform: translate(-50%, -30%); }
+                to { opacity: 1; transform: translate(-50%, -50%); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Periodic heart rain
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                createHearts(2);
+            }
+        }, 2000);
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 100);
+        });
+
+        // Check if audio file exists (optional)
+        music.addEventListener('error', function (e) {
+            console.log('Audio file failed to load');
+            audioControl.innerHTML = "⚠️ Audio unavailable";
+            audioControl.style.background = "#ff4444";
+        });
+
+        music.addEventListener('canplay', function () {
+            console.log('Audio file loaded successfully');
+            audioControl.innerHTML = "🔊 Play Music";
+        });
+    </script>
+
+</body>
+
+</html>
